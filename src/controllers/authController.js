@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/users");
+const movieModel = require("../models/movies");
 const config = require("../config/config");
 
 const generateToken = (user) => {
@@ -14,6 +15,26 @@ const createUser = async (req, res) => {
   } catch (err) {
     console.error("Error creating user:", err);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const createMovie = async (req, res) => {
+  try {
+    const newMovie = await movieModel.create(req.body);
+    res.json(newMovie);
+  } catch (err) {
+    console.error("Error creating movie:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getAllMovies = async (req, res) => {
+  try {
+    const movies = await movieModel.find();
+    res.json(movies);
+  } catch (err) {
+    console.error("Error collecting All movies:", err);
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -36,4 +57,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { createUser, login };
+module.exports = { createUser, login, createMovie, getAllMovies };
